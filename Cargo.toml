@@ -1,0 +1,25 @@
+[package]
+name = "win-notice-lite"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+pyo3 = "0.28.2"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+sha2 = "0.10.9"
+windows = { version = "0.62.2", features = [
+    "UI_Notifications",
+    "UI_Notifications_Management",
+    "Foundation",
+    "Storage_Streams",
+    "ApplicationModel",
+    "Foundation_Collections",
+] }
+windows-collections = "0.3.2"
+windows-future = "0.3.2"
+
+[lib]
+name = "win_notice_lite"
+path = "src/lib.rs"
+crate-type = ["cdylib"]

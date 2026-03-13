@@ -1,0 +1,17 @@
+[build-system]
+requires = ["maturin>=1.9.4,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "win_notice_lite"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython"
+]
+dynamic = ["version"]
+license = { text = "GPL-3.0-only" }
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "."
