@@ -44,7 +44,7 @@ pip install win-notice-lite
 
 执行以下命令将项目克隆到本地:
 ```shell
-git clone https://github.com/starwindv/win-notice-lite.git
+git clone https://github.com/starwindv/windows-notice-lite.git
 cd win-notice-lite
 ```
 
@@ -73,14 +73,12 @@ python -m pip install {path_to_wheel}
 ---
 ## 三、文档
 
-你可以在[这里](https://github.com/starwindv/win-notice-lite/blob/main/docs)找到本项目使用`cargo doc`生成的文档
+你可以在本项目的根目录下使用`cargo doc`生成文档
 
 ---
 
 ## 四、许可证
 
-本项目遵循 GPL-3.0 许可证, 但请注意: 对于列出在[文件](https://github.com/starwindv/win-notice-lite/blob/main/AUTHORS)中的开发者, 享有 GPL-3.0 许可证例外, 允许他们将本项目用于`https://github.com/Python-island/Python-island`下的每个`branch`项目的开发中, 并且不需要受到传染性影响.
+本项目遵循 GPL-3.0 许可证, 但请注意: 对于列出在[文件](https://github.com/starwindv/windows-notice-lite/blob/main/AUTHORS)中的开发者, 享有 GPL-3.0 许可证例外, 允许他们将本项目用于`https://github.com/Python-island/Python-island`下的每个`branch`项目的开发中, 并且不需要受到传染性影响.
 
 除此之外的所有使用者, 仍需遵守 GPL-3.0 的完整条款.
-
-
