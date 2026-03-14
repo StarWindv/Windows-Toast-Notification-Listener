@@ -1,7 +1,7 @@
 [package]
 name = "win-notice-lite"
 authors = ["星灿长风v(StarWindv)"]
-version = "0.0.1+alpha"
+version = "0.0.1"
 edition = "2024"
 license = "GPL-3"
 homepage = "https://github.com/starwindv/windows-notice-lite.git"
@@ -14,10 +14,7 @@ sha2 = "0.10.9"
 windows = { version = "0.62.2", features = [
     "UI_Notifications",
     "UI_Notifications_Management",
-    "Foundation",
-    "Storage_Streams",
-    "ApplicationModel",
-    "Foundation_Collections",
+    "ApplicationModel"
 ] }
 windows-collections = "0.3.2"
 windows-future = "0.3.2"
