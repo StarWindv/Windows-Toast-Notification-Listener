@@ -1,12 +1,19 @@
-use crate::modules::types::diff::Diff;
-use crate::modules::types::differ::Differ;
-use crate::modules::types::toast::Toast;
-use pyo3::pymethods;
+use super::super::types::diff::Diff;
+use super::super::types::diff_tool::DiffTool;
+use super::super::types::toast::Toast;
+use super::super::types::serialize_format::SerializeFormat;
+
+use pyo3::{pymethods, PyErr, PyResult};
+
 use std::collections::HashSet;
 
-/// 通知列表差异计算工具类
+
 #[pymethods]
-impl Differ {
+impl DiffTool {
+    #[new]
+    pub fn new() -> PyResult<Self> {
+        Ok(Self {})
+    }
     /// 基于完整指纹 (含时间) 对比通知差异
     ///
     /// 逻辑:
@@ -128,7 +135,28 @@ impl Differ {
     /// Returns:
     ///     str: 格式化的JSON字符串, 失败返回"[]"
     #[staticmethod]
-    pub fn serialize(notifications: Vec<Toast>) -> String {
-        serde_json::to_string_pretty(&notifications).unwrap_or_else(|_| "[]".to_string())
+    pub fn to_json_str(notifications: Vec<Toast>) -> Result<String, PyErr> {
+        #![allow(clippy::wrong_self_convention)]
+        DiffTool::serialize_to(notifications, SerializeFormat::Json)
+    }
+
+    /// 将通知列表序列化到指定格式的数组字符串
+    ///
+    /// Arguments:
+    ///
+    ///     notifications (list[Toast]): &[Toast] - 待序列化的通知列表
+    ///     to (SerializeFormat): SerializeFormat - 目标类型枚举
+    ///
+    /// Returns:
+    ///
+    ///     str: 格式化的字符串, 失败返回 "[]"
+    #[staticmethod]
+    pub fn serialize_to(notifications: Vec<Toast>, to: SerializeFormat) -> Result<String, PyErr> {
+        match to {
+            SerializeFormat::Json => { Ok(serde_json::to_string_pretty(&notifications).unwrap_or_else(|_| "[]".to_string())) }
+            SerializeFormat::Toml => { Ok(toml::to_string_pretty(&notifications).unwrap_or_else(|_| "[]".to_string())) }
+            SerializeFormat::Yaml => { Ok(serde_yaml::to_string(&notifications).unwrap_or_else(|_| "[]".to_string())) }
+            SerializeFormat::XML => { Ok(serde_xml_rs::to_string(&notifications).unwrap_or_else(|_| "[]".to_string())) }
+        }
     }
 }

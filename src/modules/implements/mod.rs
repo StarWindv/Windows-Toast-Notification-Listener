@@ -1,5 +1,5 @@
 pub mod diff;
-pub mod differ;
+pub mod diff_tool;
 pub mod listener;
 pub mod mutable_toast;
 pub mod toast;

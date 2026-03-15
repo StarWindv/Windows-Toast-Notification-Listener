@@ -10,6 +10,7 @@ fn win_notice_lite(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<types::toast::Toast>()?;
     m.add_class::<types::mutable_toast::MutableToast>()?;
     m.add_class::<types::diff::Diff>()?;
-    m.add_class::<types::differ::Differ>()?;
+    m.add_class::<types::diff_tool::DiffTool>()?;
+    m.add_class::<types::serialize_format::SerializeFormat>()?;
     Ok(())
 }

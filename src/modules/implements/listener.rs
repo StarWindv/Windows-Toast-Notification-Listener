@@ -21,7 +21,7 @@ impl Listener {
     ///     self (object): Result<Self> - 成功返回Listener实例, 失败返回错误
     #[new]
     pub fn new() -> PyResult<Self> {
-        let listener = UserNotificationListener::Current().to()?;
+        let listener = UserNotificationListener::Current().auto()?;
         Ok(Self { listener })
     }
 
@@ -39,29 +39,29 @@ impl Listener {
     /// Returns:
     ///
     ///     str: PyResult<String> -> IAsyncOperation<UserNotificationListenerAccessStatus>
-    ///         也就是说拿到的就是权限枚举的字符串
+    ///
+    ///     - Unspecified
+    ///     - Allowed
+    ///     - Denied
+    ///     - UnknownError: 通常见不到, 因为枚举里只有0/1/2, 这是为了符合 Rust 才加的
     ///
     /// Example:
     /// ```python
     ///     import win_notice_lite as wnl
     ///     listener = wnl.Listener()
-    ///     permission: str = await listener.elevate_privilege()
+    ///     permission: str = await listener.request_permission()
     /// ```
-    /// 这里的枚举字符串长这样:
     ///
-    ///     UserNotificationListenerAccessStatus(level)
-    ///
-    /// level:
-    ///  - 0: 无操作, 也有可能是未弹出授权窗口或者超时
-    ///  - 1: Access 已授权
-    ///  - 2: Denied 用户明确拒绝授权
-    ///
-    /// 应该还有一些值, 据说还有权限 3, 但是我真的没找到对应含义故不表
-    pub async fn elevate_privilege(&self) -> PyResult<String> {
+    pub async fn request_permission(&self) -> PyResult<String> {
         let operation: IAsyncOperation<UserNotificationListenerAccessStatus> =
-            self.listener.RequestAccessAsync().to()?;
-        let status = operation.await.to()?;
-        Ok(format!("{:?}", status))
+            self.listener.RequestAccessAsync().auto()?;
+        let status = operation.await.auto()?;
+        match status {
+            UserNotificationListenerAccessStatus(0) => Ok("Unspecified".parse()?),
+            UserNotificationListenerAccessStatus(1) => Ok("Allowed".parse()?),
+            UserNotificationListenerAccessStatus(2) => Ok("Denied".parse()?),
+            _ => Ok("Unknown".parse()?),
+        }
     }
 
     /// 获取当前系统中所有Toast类型的通知
@@ -78,7 +78,7 @@ impl Listener {
     ///
     ///     list[Toast]: Result<Vec<Toast>> - 成功返回Toast数组, 失败返回Windows API错误
     pub async fn get_all_notifications(&self) -> PyResult<Vec<Toast>> {
-        let status = self.listener.GetAccessStatus().to()?;
+        let status = self.listener.GetAccessStatus().auto()?;
         if status != UserNotificationListenerAccessStatus::Allowed {
             return Ok(vec![]);
         }
@@ -86,12 +86,12 @@ impl Listener {
         let operation: IAsyncOperation<IVectorView<UserNotification>> = self
             .listener
             .GetNotificationsAsync(NotificationKinds::Toast)
-            .to()?;
-        let raw_notifications = operation.await.to()?;
+            .auto()?;
+        let raw_notifications = operation.await.auto()?;
 
-        let mut notifications = Vec::with_capacity(raw_notifications.Size().to()? as usize);
-        for i in 0..raw_notifications.Size().to()? {
-            let notif = raw_notifications.GetAt(i).to()?;
+        let mut notifications = Vec::with_capacity(raw_notifications.Size().auto()? as usize);
+        for i in 0..raw_notifications.Size().auto()? {
+            let notif = raw_notifications.GetAt(i).auto()?;
             notifications.push(parse_notification(&notif)?);
         }
         Ok(notifications)

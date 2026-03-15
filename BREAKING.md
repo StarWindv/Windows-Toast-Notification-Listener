@@ -12,6 +12,7 @@
     - [v0.0.1](#v001)
     - [v0.0.1a0](#v001a0)
     - [v0.0.2](#v002)
+    - [v0.0.3](#v003)
 
 ---
 
@@ -31,7 +32,9 @@
 
 ### v0.0.2
 
-| 原 API                        | 新 API                      |
+此版本仅做了 API 的位置迁移
+
+| Old API                      | New API                    |
 |------------------------------|----------------------------|
 | `Listener.diff_full`         | `Differ.diff_full`         |
 | `Listener.diff_without_time` | `Differ.diff_without_time` |
@@ -39,3 +42,29 @@
 | `Listener.serialize`         | `Differ.serialize`         |
 
 ---
+
+### v0.0.3
+
+已有接口变化:
+
+|          | Old API                                            | New API                                        |
+|----------|----------------------------------------------------|------------------------------------------------|
+| API Name | `Listener.elevate_privilege`                       | `Listener.request_permission`                  |
+| Args     | `No Args`                                          | `No Args`                                      |
+| Returns  | `UserNotificationListenerAccessStatus(0/1/2)`, str | `Unspecified/Allowed/Denied/UnknownError`, str |
+
+名称迁移:
+
+| Old API                     | New API                                                 | Explanation |
+|-----------------------------|---------------------------------------------------------|-------------|
+| `Differ.diff_full`          | `DiffTool.diff_full`                                    | 名称迁移        |
+| `Differ.diff_without_time`  | `DiffTool.diff_without_time`                            | 名称迁移        |
+| `Differ.diff_by_id`         | `DiffTool.diff_by_id`                                   | 名称迁移        |
+| `Differ.serialize([Toast])` | `DiffTool.serialize_to([Toast], Type: SerializeFormat)` | 参数改变, 名称迁移  |
+|                             | `DiffTool.to_json_str([Toast])`                         | 新 API       |
+
+新的类:
+
+|                 | 类型  | 成员                    | 接口 | 是否可实例化 |
+|-----------------|-----|-----------------------|----|--------|
+| SerializeFormat | 枚举类 | Json, Yaml, Toml, XML | 无  | 否      |

@@ -7,7 +7,8 @@ __home__ = "https://github.com/starwindv/windows-notice-lite.git"
 __all__ = [
     Diff,
     Toast,
-    Differ,
+    DiffTool,
+    SerializeFormat,
     MutableToast,
     Listener,
 ]
