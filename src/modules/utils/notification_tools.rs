@@ -9,6 +9,7 @@ use windows::UI::Notifications::{
 };
 use windows::core::HSTRING;
 use windows_collections::IVectorView;
+use crate::modules::error::ConvertToPyErr;
 
 /// 解析原生UserNotification为Toast结构体
 ///
@@ -23,29 +24,29 @@ use windows_collections::IVectorView;
 /// ### 返回值
 /// Result<Toast>: 成功返回解析后的Toast, 失败返回Windows API错误
 pub(crate) fn parse_notification(raw: &UserNotification) -> PyResult<Toast> {
-    let id = raw.Id().unwrap();
-    let creation_dt: DateTime = raw.CreationTime().unwrap();
+    let id = raw.Id().auto()?;
+    let creation_dt: DateTime= raw.CreationTime().auto()?;
     let creation_time = creation_dt.UniversalTime.to_string();
 
-    let app_info = raw.AppInfo().unwrap();
-    let display_info: AppDisplayInfo = app_info.DisplayInfo().unwrap();
+    let app_info = raw.AppInfo().auto()?;
+    let display_info: AppDisplayInfo = app_info.DisplayInfo().auto()?;
     let name = display_info
         .DisplayName()
-        .unwrap()
+        .auto()?
         .to_string_lossy()
         .to_owned();
 
     let logo_uri = String::new();
 
-    let notification_content: Notification = raw.Notification().unwrap();
-    let visual: NotificationVisual = notification_content.Visual().unwrap();
-    let template_name: HSTRING = KnownNotificationBindings::ToastGeneric().unwrap();
-    let binding: NotificationBinding = visual.GetBinding(&template_name).unwrap();
+    let notification_content: Notification = raw.Notification().auto()?;
+    let visual: NotificationVisual = notification_content.Visual().auto()?;
+    let template_name: HSTRING = KnownNotificationBindings::ToastGeneric().auto()?;
+    let binding: NotificationBinding = visual.GetBinding(&template_name).auto()?;
 
-    let texts: IVectorView<AdaptiveNotificationText> = binding.GetTextElements().unwrap();
-    let mut text_vec = Vec::with_capacity(texts.Size().unwrap() as usize);
+    let texts: IVectorView<AdaptiveNotificationText> = binding.GetTextElements().auto()?;
+    let mut text_vec = Vec::with_capacity(texts.Size().auto()? as usize);
     for i in 0..texts.Size().unwrap() {
-        text_vec.push(texts.GetAt(i).unwrap());
+        text_vec.push(texts.GetAt(i).auto()?);
     }
     let title = text_vec
         .first()
