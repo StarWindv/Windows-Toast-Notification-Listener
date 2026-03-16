@@ -75,7 +75,7 @@ python -m pip install {path_to_wheel}
 ---
 ## 三、文档
 
-你可以在本项目的根目录下使用`cargo doc`生成文档
+你可以在本项目的根目录下使用`cargo doc`生成文档, 或者看我们整理好的[详细文档](https://github.com/starwindv/windows-toast-notification-listener/blob/main/doc/zh-hans)
 
 ---
 
