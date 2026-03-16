@@ -5,7 +5,7 @@ use super::super::types::toast::Toast;
 
 use std::collections::HashSet;
 
-use pyo3::{pymethods, PyErr, PyResult};
+use pyo3::{PyErr, PyResult, pymethods};
 use sha2::{Digest, Sha256};
 
 #[pymethods]
@@ -153,8 +153,13 @@ impl DiffTool {
     #[staticmethod]
     pub fn serialize_to(notifications: Vec<Toast>, to: SerializeFormat) -> Result<String, PyErr> {
         match to {
-            SerializeFormat::Json => { Ok(serde_json::to_string_pretty(&notifications).unwrap_or_else(|_| "[]".to_string())) }
-            SerializeFormat::Yaml => { Ok(serde_yaml::to_string(&notifications).unwrap_or_else(|_| "[]".to_string())) }
+            SerializeFormat::Json => {
+                Ok(serde_json::to_string_pretty(&notifications)
+                    .unwrap_or_else(|_| "[]".to_string()))
+            }
+            SerializeFormat::Yaml => {
+                Ok(serde_yaml::to_string(&notifications).unwrap_or_else(|_| "[]".to_string()))
+            }
         }
     }
 
@@ -166,12 +171,12 @@ impl DiffTool {
     /// 3. 对拼接字符串做SHA256哈希, 输出十六进制字符串
     ///
     /// Arguments:
-    /// 
+    ///
     ///     notif: &Toast - 待生成指纹的通知对象
     ///     include_time: bool - 是否包含创建时间到指纹中
     ///
     /// Returns:
-    /// 
+    ///
     ///     String: SHA256十六进制指纹字符串
     #[staticmethod]
     pub fn generate_fingerprint(notif: &Toast, include_time: bool) -> String {

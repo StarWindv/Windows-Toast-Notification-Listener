@@ -5,13 +5,13 @@ use super::super::types::diff_tool::DiffTool;
 
 use pyo3::PyResult;
 
-use windows::core::HSTRING;
 use windows::ApplicationModel::AppDisplayInfo;
 use windows::Foundation::DateTime;
 use windows::UI::Notifications::{
     AdaptiveNotificationText, KnownNotificationBindings, Notification, NotificationBinding,
     NotificationVisual, UserNotification,
 };
+use windows::core::HSTRING;
 use windows_collections::IVectorView;
 
 /// 解析原生UserNotification为Toast结构体
@@ -28,7 +28,7 @@ use windows_collections::IVectorView;
 /// Result<Toast>: 成功返回解析后的Toast, 失败返回Windows API错误
 pub(crate) fn parse_notification(raw: &UserNotification) -> PyResult<Toast> {
     let id = raw.Id().auto()?;
-    let creation_dt: DateTime= raw.CreationTime().auto()?;
+    let creation_dt: DateTime = raw.CreationTime().auto()?;
     let creation_time = creation_dt.UniversalTime.to_string();
 
     let app_info = raw.AppInfo().auto()?;

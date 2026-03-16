@@ -9,6 +9,7 @@ from importlib.metadata import version
 
 from win_notice_lite.win_notice_lite import *
 
+
 __author__ = "星灿长风v(StarWindv)"
 __license__ = "GPL-3.0-only"
 __home__ = "https://github.com/starwindv/windows-notice-lite.git"
@@ -64,15 +65,7 @@ def __bind(
 Toast.from_dict = __bind(Toast)
 MutableToast.from_dict = __bind(MutableToast)
 
-__all__ = [
-    "Diff",
-    "Toast",
-    "DiffTool",
-    "SerializeFormat",
-    "MutableToast",
-    "Listener",
-]
-
+__all__ = win_notice_lite.__all__
 
 # clean up
 del Callable, Union, Type, TypedDict, Optional

@@ -5,5 +5,5 @@ use pyo3::pyclass;
 #[derive(Copy, Clone, PartialEq)]
 pub enum SerializeFormat {
     Json,
-    Yaml
+    Yaml,
 }

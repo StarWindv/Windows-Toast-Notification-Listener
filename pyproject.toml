@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 name = "win_notice_lite"
 urls = { "Homepage" = "https://github.com/starwindv/windows-notice-lite.git" }
-author = [
+authors = [
     { name="星灿长风v(StarWindv)", email="starwindv.stv@gmail.com" }
 ]
 dynamic = ["version"]
