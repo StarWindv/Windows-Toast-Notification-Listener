@@ -8,7 +8,7 @@ This document introduces how to use the compiled binary library.
 
 - 0.1.0
 
-Note that the document version number is updated along with the project version.
+Note that the document version number should update along with the project version.
 
 ---
 
