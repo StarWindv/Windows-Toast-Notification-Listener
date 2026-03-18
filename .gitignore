@@ -1,5 +1,7 @@
 /target
 .idea
-/dist
+*dist
+*build
 win_notice_lite/__pycache__
 Cargo.lock
+*.egg-info

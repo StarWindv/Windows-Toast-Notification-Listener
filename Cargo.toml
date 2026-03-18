@@ -8,7 +8,7 @@ homepage = "https://github.com/starwindv/windows-notice-lite.git"
 description = "This project is used to encapsulate Windows-related interfaces and expose a set of processed methods for Python usage."
 
 [dependencies]
-pyo3 = { version = "0.28.2", features = ["experimental-async"] }
+pyo3 = { version = "0.28.2", features = ["experimental-async", "experimental-inspect"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
 serde_yaml = "0.9.34"
