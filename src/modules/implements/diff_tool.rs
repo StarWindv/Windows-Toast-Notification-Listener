@@ -149,7 +149,7 @@ impl DiffTool {
     ///
     /// Returns:
     ///
-    ///     str: 格式化的字符串, 失败返回 "[]"
+    ///     str: 格式化的字符串, 失败返回 "{}"
     #[staticmethod]
     pub fn serialize_to(notifications: Vec<Toast>, to: SerializeFormat) -> Result<String, PyErr> {
         match to {
@@ -159,6 +159,19 @@ impl DiffTool {
             }
             SerializeFormat::Yaml => {
                 Ok(serde_yaml::to_string(&notifications).unwrap_or_else(|_| "[]".to_string()))
+            }
+        }
+    }
+
+    #[staticmethod]
+    pub fn serialize_one(notification: &Toast, to: SerializeFormat) -> Result<String, PyErr> {
+        match to {
+            SerializeFormat::Json => {
+                Ok(serde_json::to_string_pretty(&notification)
+                    .unwrap_or_else(|_| "{}".to_string()))
+            }
+            SerializeFormat::Yaml => {
+                Ok(serde_yaml::to_string(&notification).unwrap_or_else(|_| "{}".to_string()))
             }
         }
     }

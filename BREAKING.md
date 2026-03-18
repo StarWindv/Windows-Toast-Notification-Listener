@@ -14,6 +14,7 @@
     - [v0.0.3](#v003)
     - [v0.0.4](#v004)
     - [v0.1.0](#v010)
+    - [v0.1.1](#v011)
 
 ---
 
@@ -59,6 +60,7 @@
 | -                           | `DiffTool.to_json_str([Toast])`                         | 新 API       |
 
 #### 新的类
+
 | 类名              | 类型  | 成员                    | 接口 | 是否可实例化 |
 |-----------------|-----|-----------------------|----|--------|
 | SerializeFormat | 枚举类 | Json, Yaml, Toml, XML | 无  | 否      |
@@ -140,4 +142,86 @@ polling.stop_all()            # 停止所有
 
 ---
 
-末次编辑日期: 2026年3月16日
+### v0.1.1
+
+#### 新的 API
+
+##### 覆写默认 __str__/__repr__
+
+###### 作用范围
+
+`Toast`, `MutableTOast`, `Diff`, `CallbackToken`
+
+###### 修改目的
+
+使得输出更加直观
+
+###### 新返回值示例
+
+对于 Toast/MutableToast:
+```json
+{
+  "id": 52161,
+  "name": "Python",
+  "logo_uri": "",
+  "title": "My Custom Toast",
+  "message": "This is: 1",
+  "hero_image_uri": "",
+  "inline_images": [],
+  "tag": "",
+  "group": "",
+  "creation_time": "134182754669638508",
+  "fingerprint": "a654709ca23b4ccbe16216e94a567b805a02eb72bdd1dafe03770ff5054fa7e1",
+  "fingerprint_without_time": "092097705025e2bd0a7fbb27f9250271e128f6fa4e4770e8595c03648bf72eb8"
+}
+```
+
+对于 Diff:
+```json
+{
+  "new": [
+  {
+    "id": 52171,
+    "name": "Python",
+    "logo_uri": "",
+    "title": "My Custom Toast",
+    "message": "This is: 2",
+    "hero_image_uri": "",
+    "inline_images": [],
+    "tag": "",
+    "group": "",
+    "creation_time": "134182764652809624",
+    "fingerprint": "2fbd65b8c1ac18bc4a7d3f99512867dedb03c284ba8a747297adac2b3d4b84e1",
+    "fingerprint_without_time": "b102f0db9f8b49f3915db59465448395d3cbcc8441dd140fb66a8fdb9c30fdb0"
+  }
+],
+  "remove": []
+}
+```
+
+对于 CallbackToken:
+```plaintext
+CallbackToken(number)
+```
+
+##### 新增方法: win_notice_lite.features.Polling.show_registry
+
+###### 修改目的
+
+使得输出更加直观
+
+###### 返回值示例
+
+```json
+  {
+    "CallbackToken(0)": {
+      "handler": "Py(0x1d063df5440)",
+      "events_type": "All",
+      "is_active": true
+    }
+  }
+```
+
+---
+
+末次编辑日期: 2026年3月18日

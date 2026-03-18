@@ -1,5 +1,10 @@
-use crate::modules::types::toast::Toast;
+use crate::modules::types::{
+    toast::Toast,
+    diff_tool::DiffTool,
+    serialize_format::SerializeFormat
+};
 use pyo3::{PyResult, pymethods};
+
 
 #[pymethods]
 impl Toast {
@@ -32,5 +37,13 @@ impl Toast {
             fingerprint,
             fingerprint_without_time,
         })
+    }
+
+    pub fn __str__(&self) -> String {
+        DiffTool::serialize_one(&self.clone(), SerializeFormat::Json).unwrap()
+    }
+
+    pub fn __repr__(&self) -> String {
+        self.__str__()
     }
 }

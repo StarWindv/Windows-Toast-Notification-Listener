@@ -2,6 +2,8 @@ use crate::modules::types::mutable_toast::MutableToast;
 use crate::modules::types::toast::Toast;
 use pyo3::{PyResult, pymethods};
 use std::ops::Deref;
+use crate::modules::types::diff_tool::DiffTool;
+use crate::modules::types::serialize_format::SerializeFormat;
 
 impl Deref for MutableToast {
     type Target = Toast;
@@ -42,5 +44,13 @@ impl MutableToast {
             fingerprint,
             fingerprint_without_time,
         })
+    }
+
+    pub fn __str__(&self) -> String {
+        DiffTool::serialize_one(&*self.clone(), SerializeFormat::Json).unwrap()
+    }
+
+    pub fn __repr__(&self) -> String {
+        self.__str__()
     }
 }

@@ -1,25 +1,62 @@
-use std::collections::HashMap;
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex, OnceLock};
+use std::{
+    collections::HashMap,
+    sync::{
+        Arc,
+        Mutex,
+        OnceLock,
+        atomic::{
+            AtomicBool,
+            Ordering
+        },
+    }
+};
 
-use crate::modules::types::{
-    diff_tool::DiffTool, events::features::callback_token::CallbackToken,
-    events::features::events_type::EventsType, events::features::polling_eventify::Polling,
-    events::features::polling_status::PollingStatus, listener::Listener, toast::Toast,
+use crate::modules::{
+    types::{
+        diff_tool::DiffTool,
+        listener::Listener,
+        toast::Toast,
+        events::features::{
+            callback_token::CallbackToken,
+            events_type::EventsType,
+            polling_eventify::Polling,
+            polling_status::PollingStatus,
+        },
+    },
+    error::ConvertToPyErr
 };
 
 use pyo3::{
-    Bound, Py, PyAny, PyErr, PyResult, Python, exceptions::PyTypeError, pymethods,
+    Py,
+    PyAny,
+    Bound,
+    PyErr,
+    Python,
+    PyResult,
+    exceptions::{
+        PyTypeError,
+        PyRuntimeError
+    },
+    pymethods,
     types::PyAnyMethods,
 };
 
-use crate::modules::error::ConvertToPyErr;
+use serde::Serialize;
+use serde_json::to_string_pretty;
+
 use tokio::{
     runtime::Runtime,
     time::{Duration, sleep},
 };
 
 static RUNTIME: OnceLock<Runtime> = OnceLock::new();
+
+#[derive(Debug, Clone, Serialize)]
+struct _DTOForRegistry {
+    handler: String,
+    events_type: EventsType,
+    is_active: bool,
+}
 
 #[pymethods]
 impl Polling {
@@ -204,6 +241,43 @@ impl Polling {
     pub fn change_interval(&mut self, interval: i32) {
         self.interval = interval;
         *self.interval_shared.lock().unwrap() = interval;
+    }
+
+    /// 返回当前注册表的内容字符串
+    ///
+    /// Returns:
+    /// ```json
+    /// {
+    ///     "CallbackToken(x)": {
+    ///         "handler": "Py(0x..abcdefg)",
+    ///         "events_type": "All/New/Remove",
+    ///         "is_active": bool
+    ///     }, ...
+    /// }
+    /// ```
+    pub fn show_registry(&self) -> Result<String, PyErr> {
+        let guard = self.registry.lock().map_err(|e| {
+            PyRuntimeError::new_err(format!("[WNL Error] Failed to lock registry: {:?}", e))
+        })?;
+
+        let serializable_registry: HashMap<String, _DTOForRegistry> = guard
+            .iter()
+            .map(|(token, (py_obj, events_type, flag))| {
+                let py_debug_str = Python::try_attach(|_| {
+                    format!("{:?}", py_obj.as_ref())
+                });
+
+                (
+                    token.__str__(),
+                    _DTOForRegistry {
+                        handler: py_debug_str.unwrap(),
+                        events_type: events_type.clone(),
+                        is_active: *flag,
+                    },
+                )
+            })
+            .collect();
+        Ok(to_string_pretty(&serializable_registry).unwrap())
     }
 }
 
